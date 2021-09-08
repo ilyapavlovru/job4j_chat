@@ -1,11 +1,14 @@
 package ru.job4j.chat.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name = "room")
 public class Room {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -76,6 +79,7 @@ public class Room {
         this.messages.add(message);
     }
 
+    @JsonIgnore
     public Person getPerson() {
         return person;
     }

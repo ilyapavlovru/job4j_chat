@@ -1,6 +1,8 @@
 package ru.job4j.chat.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +21,9 @@ public class Person {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "person", fetch = FetchType.LAZY)
+    private List<Room> rooms = new ArrayList<>();
 
     private boolean enabled;
 
@@ -60,6 +65,14 @@ public class Person {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     @Override

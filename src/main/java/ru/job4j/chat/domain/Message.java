@@ -1,5 +1,7 @@
 package ru.job4j.chat.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -50,6 +52,7 @@ public class Message {
         this.created = created;
     }
 
+    @JsonIgnore
     public Room getRoom() {
         return room;
     }
@@ -58,6 +61,7 @@ public class Message {
         this.room = room;
     }
 
+    @JsonIgnore
     public Person getPerson() {
         return person;
     }

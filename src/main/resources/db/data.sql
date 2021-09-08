@@ -11,3 +11,12 @@ insert into room (name, person_id)
 values ('Programmers chat', 1);
 insert into room (name, person_id)
 values ('Designers chat', 1);
+
+insert into message(text, room_id, person_id)
+values ('Первое сообщение в комнате программеров', 1, 1);
+insert into message(text, room_id, person_id)
+values ('Второе сообщение в комнате программеров', 1, 1);
+insert into message(text, room_id, person_id)
+values ('Первое сообщение в комнате дизайнеров', 2, 1);
+insert into message(text, room_id, person_id)
+values ('Второе сообщение в комнате дизайнеров', 2, 1);
