@@ -1,8 +1,6 @@
 package ru.job4j.chat.domain;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -14,7 +12,7 @@ public class Person {
     private int id;
 
     @Column(name = "username")
-    private String userName;
+    private String username;
 
     private String password;
 
@@ -28,9 +26,9 @@ public class Person {
     public Person() {
     }
 
-    public Person(int id, String userName, String password) {
+    public Person(int id, String username, String password) {
         this.id = id;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
     }
 
@@ -52,12 +50,12 @@ public class Person {
         this.password = password;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Role getRole() {
