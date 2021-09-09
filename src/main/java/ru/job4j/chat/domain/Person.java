@@ -13,17 +13,26 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String password;
-
     @Column(name = "username")
     private String userName;
+
+    private String password;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "person", fetch = FetchType.LAZY)
-    private List<Room> rooms = new ArrayList<>();
+//    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "person", fetch = FetchType.LAZY)
+//    private List<Room> rooms = new ArrayList<>();
+
+    public Person() {
+    }
+
+    public Person(int id, String userName, String password) {
+        this.id = id;
+        this.userName = userName;
+        this.password = password;
+    }
 
     private boolean enabled;
 
@@ -67,13 +76,13 @@ public class Person {
         this.enabled = enabled;
     }
 
-    public List<Room> getRooms() {
-        return rooms;
-    }
-
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
-    }
+//    public List<Room> getRooms() {
+//        return rooms;
+//    }
+//
+//    public void setRooms(List<Room> rooms) {
+//        this.rooms = rooms;
+//    }
 
     @Override
     public boolean equals(Object o) {

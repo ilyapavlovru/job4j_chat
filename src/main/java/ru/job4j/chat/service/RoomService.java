@@ -6,6 +6,7 @@ import ru.job4j.chat.repository.RoomRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoomService {
@@ -20,5 +21,17 @@ public class RoomService {
         List<Room> rsl = new ArrayList<>();
         roomRepository.findAll().forEach(rsl::add);
         return rsl;
+    }
+
+    public Optional<Room> findRoomById(int id) {
+        return roomRepository.findById(id);
+    }
+
+    public Room saveRoom(Room room) {
+        return roomRepository.save(room);
+    }
+
+    public void deleteRoom(Room room) {
+        roomRepository.delete(room);
     }
 }
