@@ -20,9 +20,6 @@ public class Person {
     @JoinColumn(name = "role_id")
     private Role role;
 
-//    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "person", fetch = FetchType.LAZY)
-//    private List<Room> rooms = new ArrayList<>();
-
     public Person() {
     }
 
@@ -73,14 +70,6 @@ public class Person {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-
-//    public List<Room> getRooms() {
-//        return rooms;
-//    }
-//
-//    public void setRooms(List<Room> rooms) {
-//        this.rooms = rooms;
-//    }
 
     @Override
     public boolean equals(Object o) {
