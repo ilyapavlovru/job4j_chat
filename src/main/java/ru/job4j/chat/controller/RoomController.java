@@ -10,6 +10,9 @@ import ru.job4j.chat.domain.Room;
 import ru.job4j.chat.service.PersonService;
 import ru.job4j.chat.service.RoomService;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -60,6 +63,48 @@ public class RoomController {
                 roomService.saveRoom(room),
                 HttpStatus.CREATED
         );
+    }
+
+    @PatchMapping("/{roomId}/person/{personId}")
+    public Room patch(@PathVariable int roomId, @PathVariable int personId, @RequestBody Room room)
+            throws InvocationTargetException, IllegalAccessException {
+
+        Room foundRoom = roomService.findRoomById(roomId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Room is not found. Please, check roomId"
+        ));
+        Person foundPerson = personService.findPersonById(personId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Person is not found. Please, check personId"
+        ));
+        room.setId(roomId);
+        room.setPerson(foundPerson);
+
+        var methods = foundRoom.getClass().getDeclaredMethods();
+        var namePerMethod = new HashMap<String, Method>();
+        for (var method: methods) {
+            var name = method.getName();
+            if (name.startsWith("get") || name.startsWith("set")) {
+                namePerMethod.put(name, method);
+            }
+        }
+
+        for (var name : namePerMethod.keySet()) {
+            if (name.startsWith("get")) {
+                var getMethod = namePerMethod.get(name);
+                var setMethod = namePerMethod.get(name.replace("get", "set"));
+                if (setMethod == null) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid properties mapping");
+                }
+                var newValue = getMethod.invoke(room);
+                if (newValue != null) {
+                    setMethod.invoke(foundRoom, newValue);
+                }
+            }
+        }
+
+        roomService.saveRoom(room);
+        return foundRoom;
     }
 
     @PutMapping("/{roomId}/person/{personId}")
