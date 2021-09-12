@@ -10,6 +10,7 @@ import ru.job4j.chat.domain.Room;
 import ru.job4j.chat.service.PersonService;
 import ru.job4j.chat.service.RoomService;
 
+import javax.validation.Valid;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -49,11 +50,7 @@ public class RoomController {
     }
 
     @PostMapping("/person/{id}")
-    public ResponseEntity<Room> save(@RequestBody Room room, @PathVariable int id) {
-        var roomName = room.getName();
-        if (roomName == null) {
-            throw new NullPointerException("Room name mustn't be empty");
-        }
+    public ResponseEntity<Room> save(@Valid @RequestBody Room room, @PathVariable int id) {
         Person person = personService.findPersonById(id).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
                 "Person is not found. Please, check personId"
@@ -66,7 +63,7 @@ public class RoomController {
     }
 
     @PatchMapping("/{roomId}/person/{personId}")
-    public Room patch(@PathVariable int roomId, @PathVariable int personId, @RequestBody Room room)
+    public Room patch(@PathVariable int roomId, @PathVariable int personId, @Valid @RequestBody Room room)
             throws InvocationTargetException, IllegalAccessException {
 
         Room foundRoom = roomService.findRoomById(roomId).orElseThrow(() -> new ResponseStatusException(
@@ -108,12 +105,7 @@ public class RoomController {
     }
 
     @PutMapping("/{roomId}/person/{personId}")
-    public ResponseEntity<Room> update(@PathVariable int roomId, @PathVariable int personId, @RequestBody Room room) {
-
-        var roomName = room.getName();
-        if (roomName == null) {
-            throw new NullPointerException("Room name mustn't be empty");
-        }
+    public ResponseEntity<Room> update(@PathVariable int roomId, @PathVariable int personId, @Valid @RequestBody Room room) {
 
         Room foundRoom = roomService.findRoomById(roomId).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND,

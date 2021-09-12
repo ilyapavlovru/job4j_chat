@@ -3,6 +3,8 @@ package ru.job4j.chat.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Objects;
@@ -13,8 +15,10 @@ public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "Id must be non null")
     private int id;
 
+    @NotBlank(message = "Message text must be not empty")
     private String text;
 
     @Temporal(TemporalType.TIMESTAMP)

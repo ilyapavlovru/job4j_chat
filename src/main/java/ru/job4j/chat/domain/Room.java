@@ -3,6 +3,8 @@ package ru.job4j.chat.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Entity
@@ -11,8 +13,10 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "Id must be non null")
     private int id;
 
+    @NotBlank(message = "Room name must be not empty")
     private String name;
 
     private String description;

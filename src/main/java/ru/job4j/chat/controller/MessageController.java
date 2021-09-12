@@ -11,6 +11,7 @@ import ru.job4j.chat.service.MessageService;
 import ru.job4j.chat.service.PersonService;
 import ru.job4j.chat.service.RoomService;
 
+import javax.validation.Valid;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -32,12 +33,8 @@ public class MessageController {
     }
 
     @PostMapping("/room/{roomId}/person/{personId}")
-    public ResponseEntity<Message> save(@PathVariable int roomId, @PathVariable int personId, @RequestBody Message message) {
-
-        var messageText = message.getText();
-        if (messageText == null) {
-            throw new NullPointerException("Message text mustn't be empty");
-        }
+    public ResponseEntity<Message> save(@PathVariable int roomId, @PathVariable int personId,
+                                        @Valid @RequestBody Message message) {
 
         Room room = roomService.findRoomById(roomId).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND,
@@ -60,7 +57,7 @@ public class MessageController {
     }
 
     @PatchMapping("/room/{roomId}/person/{personId}")
-    public Message patch(@PathVariable int roomId, @PathVariable int personId, @RequestBody Message message )
+    public Message patch(@PathVariable int roomId, @PathVariable int personId, @Valid @RequestBody Message message )
             throws InvocationTargetException, IllegalAccessException {
 
         Room room = roomService.findRoomById(roomId).orElseThrow(() -> new ResponseStatusException(
