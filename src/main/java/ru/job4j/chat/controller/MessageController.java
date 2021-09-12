@@ -3,6 +3,7 @@ package ru.job4j.chat.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.chat.domain.Message;
 import ru.job4j.chat.domain.Person;
 import ru.job4j.chat.domain.Room;
@@ -29,8 +30,19 @@ public class MessageController {
     @PostMapping("/room/{roomId}/person/{personId}")
     public ResponseEntity<Message> save(@PathVariable int roomId, @PathVariable int personId, @RequestBody Message message) {
 
-        Room room = roomService.findRoomById(roomId).get();
-        Person person = personService.findPersonById(personId).get();
+        var messageText = message.getText();
+        if (messageText == null) {
+            throw new NullPointerException("Message text mustn't be empty");
+        }
+
+        Room room = roomService.findRoomById(roomId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Room is not found. Please, check roomId"
+        ));
+        Person person = personService.findPersonById(personId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Person is not found. Please, check personId"
+        ));
 
         Message createdMessage = new Message();
         createdMessage.setText(message.getText());

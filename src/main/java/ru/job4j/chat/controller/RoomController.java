@@ -3,6 +3,7 @@ package ru.job4j.chat.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.chat.domain.Person;
 import ru.job4j.chat.domain.Response;
 import ru.job4j.chat.domain.Room;
@@ -10,7 +11,6 @@ import ru.job4j.chat.service.PersonService;
 import ru.job4j.chat.service.RoomService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/room")
@@ -34,16 +34,27 @@ public class RoomController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Room> findById(@PathVariable int id) {
-        Optional<Room> room = roomService.findRoomById(id);
+        Room room = roomService.findRoomById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Room is not found. Please, check roomId"
+                ));
         return new ResponseEntity<Room>(
-                room.orElse(new Room()),
-                room.isPresent() ? HttpStatus.OK : HttpStatus.NOT_FOUND
+                room,
+                HttpStatus.OK
         );
     }
 
     @PostMapping("/person/{id}")
     public ResponseEntity<Room> save(@RequestBody Room room, @PathVariable int id) {
-        Person person = personService.findPersonById(id).get();
+        var roomName = room.getName();
+        if (roomName == null) {
+            throw new NullPointerException("Room name mustn't be empty");
+        }
+        Person person = personService.findPersonById(id).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Person is not found. Please, check personId"
+        ));
         room.setPerson(person);
         return new ResponseEntity<Room>(
                 roomService.saveRoom(room),
@@ -54,12 +65,23 @@ public class RoomController {
     @PutMapping("/{roomId}/person/{personId}")
     public ResponseEntity<Room> update(@PathVariable int roomId, @PathVariable int personId, @RequestBody Room room) {
 
-        Room foundRoom = roomService.findRoomById(roomId).get();
-        Person person = personService.findPersonById(personId).get();
+        var roomName = room.getName();
+        if (roomName == null) {
+            throw new NullPointerException("Room name mustn't be empty");
+        }
+
+        Room foundRoom = roomService.findRoomById(roomId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Room is not found. Please, check roomId"
+        ));
+        Person foundPerson = personService.findPersonById(personId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Person is not found. Please, check personId"
+        ));
 
         foundRoom.setName(room.getName());
         foundRoom.setDescription(room.getDescription());
-        foundRoom.setPerson(person);
+        foundRoom.setPerson(foundPerson);
 
         return new ResponseEntity<Room>(
                 this.roomService.saveRoom(foundRoom),
