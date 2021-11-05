@@ -10,8 +10,10 @@
 **Используемые технологии:**
 ==
 - Java 12
-- Spring (ORM, Data, Security)
-- PostgreSQL, Hibernate, JDBC
+- Spring Boot 2
+- Spring Security & JWT authorization
+- Spring Data JPA
+- PostgreSQL
 - Maven, Tomcat
 
 **Функциональность**
