@@ -6,22 +6,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.job4j.chat.domain.Person;
-import ru.job4j.chat.store.UserStore;
+import ru.job4j.chat.repository.PersonRepository;
 
 import static java.util.Collections.emptyList;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private UserStore users;
+    private final PersonRepository peronRepository;
 
-    public UserDetailsServiceImpl(UserStore users) {
-        this.users = users;
+    public UserDetailsServiceImpl(PersonRepository peronRepository) {
+        this.peronRepository = peronRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Person user = users.findByUsername(username);
+        Person user = peronRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }

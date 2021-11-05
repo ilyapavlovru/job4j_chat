@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.chat.domain.Person;
-import ru.job4j.chat.store.UserStore;
+import ru.job4j.chat.service.PersonService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,16 +21,15 @@ public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class.getSimpleName());
 
-    private final UserStore users;
+    private final PersonService personService;
 
     private final BCryptPasswordEncoder encoder;
 
     private final ObjectMapper objectMapper;
 
-    public UserController(UserStore users,
-                          BCryptPasswordEncoder encoder,
+    public UserController(PersonService personService, BCryptPasswordEncoder encoder,
                           ObjectMapper objectMapper) {
-        this.users = users;
+        this.personService = personService;
         this.encoder = encoder;
         this.objectMapper = objectMapper;
     }
@@ -49,22 +48,24 @@ public class UserController {
             throw new IllegalArgumentException("Invalid password. Password length must be more than 5 characters");
         }
         person.setPassword(encoder.encode(person.getPassword()));
-        users.save(person);
+        personService.save(person);
     }
 
     @GetMapping("/all")
     public List<Person> findAll() {
-        return users.findAll();
+        return personService.findAll();
     }
 
-    @ExceptionHandler(value = { IllegalArgumentException.class })
+    @ExceptionHandler(value = {IllegalArgumentException.class})
     public void exceptionHandler(Exception e, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         response.setContentType("application/json");
-        response.getWriter().write(objectMapper.writeValueAsString(new HashMap<>() { {
-            put("message", e.getMessage());
-            put("type", e.getClass());
-        }}));
+        response.getWriter().write(objectMapper.writeValueAsString(new HashMap<>() {
+            {
+                put("message", e.getMessage());
+                put("type", e.getClass());
+            }
+        }));
         LOGGER.error(e.getLocalizedMessage());
     }
 }
