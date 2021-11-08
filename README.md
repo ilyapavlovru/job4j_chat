@@ -21,3 +21,9 @@
 - JWT для авторизации
 - CRUD операции для доменных моделей
 - REST API
+
+**Контакты:**
+==
+[![telegram](https://img.shields.io/badge/Telegram-gray?style=for-the-badge&logo=Telegram&logoColor=white)](https://t.me/pavlovilyaru)
+[![email](https://img.shields.io/badge/Mail.Ru-blue?style=for-the-badge&logo=Mail.Ru&logoColor=white)](mailto:ilya.pavlov@list.ru)
+
